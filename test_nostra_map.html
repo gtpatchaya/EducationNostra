@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title></title>
+    <script type="text/javascript"
+        src="//api.nostramap.com/nostraapi/v2.0?key=GzK0Ok0h)7dNsn15p1u4OgA6vKxWzv4UimteWZC0kc2lo)UwNjYrJLjrWWqtSHLQ7IF4MlVKvcBCk6ONNJ5sIym=====2"></script>
+    <style>
+        .map {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin-top: 50px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var pointLayer;
+        var points = [];
+        var map;
+
+        nostra.onready = function () {
+            //start your code here
+            map = new nostra.maps.Map("mapDiv", {
+                id: "mapTest",
+                logo: true,
+                scalebar: true,
+                basemap: "streetmap",
+                slider: true,
+                level: 15,
+                lat: 13.722944,
+                lon: 100.530449,
+                country: "TH"
+            });
+
+
+
+
+
+
+
+        };
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+        function showPosition(position) {
+
+            var lat_current = position.coords.latitude;
+            var lon_current = position.coords.longitude;
+            pointLayer = new nostra.maps.layers.GraphicsLayer(map, { id: "pointLayer", mouseOver: false });
+            map.addLayer(pointLayer);
+
+            var pointMarker = new nostra.maps.symbols.Marker({ url: "", draggable: true, width: 60, height: 60, attributes: { POI_NAME: "TestAttr", POI_ROAD: "TestAttr" } });
+            var g = pointLayer.addMarker(lat_current, lon_current, pointMarker);
+            points.push([lat_current, lon_current]);
+            setExtent();
+        }
+
+        function setExtent() {
+            map.setExtent(points);
+        }
+
+        function getcurrent_locate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+                //showPosition();
+
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="getcurrent_locate()"><i class="material-icons" style="font-size:20px">my_location</i></button> Getcurrentlocation
+    <div id="mapDiv"></div>
+</body>
+
+</html>
